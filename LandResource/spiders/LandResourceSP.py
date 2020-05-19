@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import scrapy
-import scrapy_splash
+from LandResource.items import LandresourceItem
+# import scrapy_splash
 
 
 # 模拟点击采用js的方式
@@ -18,7 +19,7 @@ function main(splash, args)
 end
 """
 
-
+"""
 class LandresourcespSpider(scrapy.Spider):
     name = 'LandResourceSP'
     allowed_domains = ['www.cdggzy.com']
@@ -32,3 +33,19 @@ class LandresourcespSpider(scrapy.Spider):
 
     def parse(self, response):
         print(response.xpath(".//div[@class='col-xs-10 infotitle']/a[1]").extract())
+"""
+
+
+class LandresourcespSpider(scrapy.Spider):
+    name = 'LandResourceSP'
+    allowed_domains = ['www.cdggzy.com']
+    start_urls = ['https://www.cdggzy.com/site/LandTrade/LandList.aspx/']
+
+    def parse(self, response):
+        notice_list = response.xpath("//div[@id='contentlist']/div[@class='row contentitem']")
+        for i_notice in notice_list:
+            landresource_item = LandresourceItem()
+            landresource_item['notice_name'] = i_notice.xpath("./div[@class='col-xs-10 infotitle']/a/text()").extract_first()
+            print(landresource_item)
+
+

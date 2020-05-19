@@ -11,8 +11,10 @@ import scrapy
 class LandresourceItem(scrapy.Item):
     # define the fields for your item here like:
     # name = scrapy.Field()
+    #公告名
+    notice_name = scrapy.Field()
     #公告号码
-    notice = scrapy.Field()
+    notice_number = scrapy.Field()
     #序号
     serial_number = scrapy.Field()
     #宗地编号
