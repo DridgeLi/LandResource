@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 import scrapy
+from selenium import webdriver
+import re
 from LandResource.items import LandresourceItem
-# import scrapy_splash
 
 
 # 模拟点击采用js的方式
@@ -41,11 +42,28 @@ class LandresourcespSpider(scrapy.Spider):
     allowed_domains = ['www.cdggzy.com']
     start_urls = ['https://www.cdggzy.com/site/LandTrade/LandList.aspx/']
 
+    print("开始爬取网页...")
+
     def parse(self, response):
+        print("开始爬取第一页")
+        landresource_item = LandresourceItem()
+        latest_notice_number = 34
         notice_list = response.xpath("//div[@id='contentlist']/div[@class='row contentitem']")
         for i_notice in notice_list:
-            landresource_item = LandresourceItem()
-            landresource_item['notice_name'] = i_notice.xpath("./div[@class='col-xs-10 infotitle']/a/text()").extract_first()
-            print(landresource_item)
+            landresource_item['notice_name'] = i_notice.xpath(".//div[@class='col-xs-10 infotitle']/a/text()").extract_first()
+            landresource_item['notice_link'] = i_notice.xpath(".//div[@class='col-xs-10 infotitle']/a[@href]").extract()
+            while re.search(r"成公资土拍告", landresource_item['notice_name']):
+                notice_number = int(landresource_item['notice_time'][31:32])
+                if notice_number > latest_notice_number:
+                    yield scrapy.Request(landresource_item['notice_link'], callback=self.parse_currentNotice(), meta={landresource_item})
+                else:
+                    break
+
+    def parse_currentNotice(self, response):
+        landresource_item = LandresourceItem()
+        notice_content = response.xpath("//div[@id='noticecontent']")
+        for i_notice_content in notice_content:
+            landresource_item['time_list'] = i_notice_content.xpath(".//div[@class='noticepubtime']/text()").extract_first()
+            landresource_item['']
 
 

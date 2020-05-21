@@ -15,6 +15,8 @@ class LandresourceItem(scrapy.Item):
     notice_name = scrapy.Field()
     #公告号码
     notice_number = scrapy.Field()
+    #公告链接
+    notice_link = scrapy.Field()
     #序号
     serial_number = scrapy.Field()
     #宗地编号
