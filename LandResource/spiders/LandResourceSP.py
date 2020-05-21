@@ -64,6 +64,6 @@ class LandresourcespSpider(scrapy.Spider):
         notice_content = response.xpath("//div[@id='noticecontent']")
         for i_notice_content in notice_content:
             landresource_item['time_list'] = i_notice_content.xpath(".//div[@class='noticepubtime']/text()").extract_first()
-            landresource_item['']
+
 
 
